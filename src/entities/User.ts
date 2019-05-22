@@ -1,15 +1,25 @@
 import { Ignore, MapProp } from "ts-simple-automapper";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "./Comment";
+import { Post } from "./Post";
 
 @Entity()
 export class User {
+    @Ignore()
+    @OneToMany(() => Comment, c => c.user)
+    public comments: Comment[];
+
     // Map email from commands to create/update users.
     @MapProp()
-    @Column({ nullable: false })
+    @Column({ length: 200, nullable: false })
     public email: string;
 
-    // Do not map ID to existing users.
+    // Avoid mapping ID to existing users.
     @Ignore()
     @PrimaryGeneratedColumn()
     public id: number;
+
+    @Ignore()
+    @OneToMany(() => Post, p => p.user)
+    public posts: Post[];
 }
