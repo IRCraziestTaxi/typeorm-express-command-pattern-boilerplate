@@ -18,9 +18,6 @@ export class AddPostHandler implements ICommandHandler<AddPostCommand, Promise<C
         try {
             const addPost = new Mapper().map(request, new Post());
 
-            // Post entity ignores userId during mapping.
-            addPost.userId = request.userId;
-
             const createdPost = await new LinqRepository(Post).create(addPost);
 
             return new GenericResponse(createdPost.id);

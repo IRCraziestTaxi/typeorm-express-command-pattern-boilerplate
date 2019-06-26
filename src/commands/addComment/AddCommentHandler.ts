@@ -18,10 +18,6 @@ export class AddCommentHandler implements ICommandHandler<AddCommentCommand, Pro
         try {
             const addComment = new Mapper().map(request, new Comment());
 
-            // Comment entity ignores postId and userId during mapping.
-            addComment.postId = request.postId;
-            addComment.userId = request.userId;
-
             const createdComment = await new LinqRepository(Comment).create(addComment);
 
             return new GenericResponse(createdComment.id);

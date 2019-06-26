@@ -25,8 +25,6 @@ export class RejectionMediator extends BaseMediator {
             return rejection;
         }
 
-        handler.Log();
-
         return handler.Handle(payload);
     }
 }

@@ -1,6 +1,7 @@
-import { Ignore, MapProp } from "ts-simple-automapper";
+import { Ignore, MapFrom, MapProp } from "ts-simple-automapper";
 import { nameof } from "ts-simple-nameof";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AddCommentCommand } from "../commands/addComment/AddCommentCommand";
 import { Post } from "./Post";
 import { User } from "./User";
 
@@ -20,6 +21,7 @@ export class Comment {
     public post: Post;
 
     @Ignore()
+    @MapFrom(() => AddCommentCommand)
     @Column({ nullable: false })
     public postId: number;
 
@@ -29,6 +31,7 @@ export class Comment {
     public user: User;
 
     @Ignore()
+    @MapFrom(() => AddCommentCommand)
     @Column({ nullable: false })
     public userId: number;
 }
