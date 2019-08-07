@@ -27,10 +27,10 @@ export class PostController extends BaseController {
 
     @Delete("/:postId")
     public async deletePost(
-        @Body() request: DeletePostCommand,
         @Param("postId") postId: number,
         @Res() response: Response
     ): Promise<Response> {
+        const request = new DeletePostCommand();
         request.postId = postId;
         const deleteResult = await new RejectionMediator().Send(DeletePostHandler.type, request);
 

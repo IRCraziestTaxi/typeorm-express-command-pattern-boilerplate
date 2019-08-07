@@ -40,10 +40,10 @@ export class UserController extends BaseController {
 
     @Delete("/:userId")
     public async deleteUser(
-        @Body() request: DeleteUserCommand,
         @Param("userId") userId: number,
         @Res() response: Response
     ): Promise<Response> {
+        const request = new DeleteUserCommand();
         request.userId = userId;
         const deleteResult = await new RejectionMediator().Send(DeleteUserHandler.type, request);
 

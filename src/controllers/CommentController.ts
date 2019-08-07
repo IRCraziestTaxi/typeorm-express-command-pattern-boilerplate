@@ -12,10 +12,10 @@ import { BaseController } from "./_BaseController";
 export class CommentController extends BaseController {
     @Delete("/:commentId")
     public async deleteComment(
-        @Body() request: DeleteCommentCommand,
         @Param("commentId") commentId: number,
         @Res() response: Response
     ): Promise<Response> {
+        const request = new DeleteCommentCommand();
         request.commentId = commentId;
         const deleteResult = await new RejectionMediator().Send(DeleteCommentHandler.type, request);
 

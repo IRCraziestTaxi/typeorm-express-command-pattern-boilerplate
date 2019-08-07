@@ -8,6 +8,6 @@ export class AddPostCommand {
     @Expose()
     public title: string;
 
-    @Expose()
+    // Allow the controller to set this property.
     public userId: number;
 }

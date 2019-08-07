@@ -5,7 +5,7 @@ export class UpdatePostCommad {
     @Expose()
     public content: string;
 
-    @Expose()
+    // Allow the controller to set this property.
     public postId: number;
 
     @Expose()

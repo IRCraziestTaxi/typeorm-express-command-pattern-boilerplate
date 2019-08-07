@@ -5,6 +5,6 @@ export class UpdateCommentCommand {
     @Expose()
     public comment: string;
 
-    @Expose()
+    // Allow the controller to set this property.
     public commentId: number;
 }

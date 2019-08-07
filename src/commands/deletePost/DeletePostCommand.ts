@@ -2,6 +2,6 @@ import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
 export class DeletePostCommand {
-    @Expose()
+    // Allow the controller to set this property.
     public postId: number;
 }

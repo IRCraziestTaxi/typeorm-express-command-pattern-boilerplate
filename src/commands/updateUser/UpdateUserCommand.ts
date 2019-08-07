@@ -7,7 +7,6 @@ export class UpdateUserCommand {
     @Expose()
     public email: string;
 
-    // Map the "userId" property from the incoming JSON request.
-    @Expose()
+    // Allow the controller to set this property.
     public userId: number;
 }
