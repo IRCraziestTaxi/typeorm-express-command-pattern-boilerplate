@@ -17,7 +17,7 @@ To check your code against the awesome TSLint rules defined in `tslint.json`, ru
 ## Migrations
 Use the following commands (defined in `package.json`) to create, build, apply, and revert migrations.
 
-* `npm run generate-migration -- -n <migrationName>` - Call the `generate-migration` script and provide the name argument for the migration required by TypeORM. For example, your initial migration may be created by running the command `npm run generate-migration -- -n Initial`.
-* `npm run build-migrations` - Compile generated typescript migration files into the javascript used by the TypeORM CLI to apply the migration.
-* `npm run run-migrations` - Apply all pending migrations to the database specified in `ormconfig.json`.
-* `npm run revert-migration` - Revert the last applied migration. Note that only one migration may be reverted at a time, so to revert several migrations, you will need to run this command multiple times.
+* `npm run mig:make -- -n <migrationName>` - Call the `mig:make` script and provide the name argument for the migration required by TypeORM. For example, your initial migration may be created by running the command `npm run mig:make -- -n Initial`.
+* `npm run mig:build` - Compile generated typescript migration files into the javascript used by the TypeORM CLI to apply the migration.
+* `npm run mig:run` - Apply all pending migrations to the database specified in `ormconfig.json`.
+* `npm run mig:revert` - Revert the last applied migration. Note that only one migration may be reverted at a time, so to revert several migrations, you will need to run this command multiple times.
