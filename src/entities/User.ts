@@ -11,7 +11,7 @@ export class User {
 
     // Map email from commands to create/update users.
     @MapProp()
-    @Column({ length: 200, nullable: false })
+    @Column({ length: 300, nullable: false, unique: true })
     public email: string;
 
     // Avoid mapping ID to existing users.

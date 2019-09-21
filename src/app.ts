@@ -3,12 +3,10 @@ import * as express from "express";
 import { Application, NextFunction, Request, Response } from "express";
 import { RequestHandler } from "express-serve-static-core";
 import { RoutingControllersOptions, useExpressServer } from "routing-controllers";
-import { ConnectionOptions, createConnection } from "typeorm";
-import * as dbConfig from "../ormconfig.json";
+import { createConnection } from "typeorm";
 
-const dbOptions = dbConfig[0] as ConnectionOptions;
-
-createConnection(dbOptions)
+// TODO: Make app await this, etc.
+createConnection()
     .catch((error: any) => {
         console.error(error);
     });
