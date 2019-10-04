@@ -1,9 +1,7 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "build",
-        "sourceMap": true,
-        "watch": true
+        "outDir": "dist"
     },
     "exclude": [
         "src/entities/migrations"

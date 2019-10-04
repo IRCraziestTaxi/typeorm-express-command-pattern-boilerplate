@@ -2,42 +2,81 @@ import * as express from "express";
 // tslint:disable-next-line: no-duplicate-imports
 import { Application, NextFunction, Request, Response } from "express";
 import { RequestHandler } from "express-serve-static-core";
-import { RoutingControllersOptions, useExpressServer } from "routing-controllers";
-import { createConnection } from "typeorm";
+import { RoutingControllersOptions } from "routing-controllers";
+import { createConnection, getConnectionManager, getConnectionOptions } from "typeorm";
+import { initializeTransactionalContext, patchTypeORMRepositoryWithBaseRepository } from "typeorm-transactional-cls-hooked";
 
-// TODO: Make app await this, etc.
-createConnection()
-    .catch((error: any) => {
+initializeTransactionalContext();
+patchTypeORMRepositoryWithBaseRepository();
+
+const createApp = async () => {
+    try {
+        await createAppConnection();
+
+        const app: Application = express();
+
+        // Modify app as needed.
+
+        return app;
+    }
+    catch (error) {
+        console.error("Could not create app. An error occured.");
         console.error(error);
-    });
+
+        throw error;
+    }
+};
+
+// This can be useful for applications other than an express app
+// (for instance, a lambda handler for an S3 event)
+// so that the connection can be closed upon completion.
+const createAppConnection = async () => {
+    try {
+        const connectionManager = getConnectionManager();
+
+        if (!connectionManager.connections.length) {
+            const connectionOptions = await getConnectionOptions();
+
+            const envPassword = process.env.TYPEORM_PASSWORD;
+
+            if (envPassword) {
+                (connectionOptions as any).password = envPassword;
+            }
+
+            return await createConnection(connectionOptions);
+        }
+    }
+    catch (error) {
+        console.error("Could not create connection. An error occured.");
+        console.error(error);
+
+        throw error;
+    }
+};
+
+const getAllowSameOriginHandler: (origin: string) => RequestHandler = (origin: string) => {
+    return (request: Request, response: Response, next: NextFunction) => {
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+
+        const allowedHeaders: string[] = [
+            "Content-Type",
+            "Authorization",
+            "Content-Length",
+            "X-Requested-By",
+            "X-Requested-With"
+        ];
+        response.setHeader("Access-Control-Allow-Headers", allowedHeaders.join(","));
+
+        next();
+    };
+};
 
 // Set up path to controllers.
-const options: RoutingControllersOptions = {
+const routingControllersOptions: RoutingControllersOptions = {
     controllers: [
         `${__dirname}/controllers/*.js`
     ]
 };
 
-// Used while testing locally to allow localhost front end and localhost backend to communicate.
-// Remove when deploying the API to the server.
-const allowSameOrigin: RequestHandler = (request: Request, response: Response, next: NextFunction) => {
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-
-    const allowedHeaders: string[] = [
-        "Content-Type",
-        "Authorization",
-        "Content-Length",
-        "X-Requested-By",
-        "X-Requested-With"// ,
-        // AuthTokens.HEADER_AUTH_KEY
-    ];
-    response.setHeader("Access-Control-Allow-Headers", allowedHeaders.join(","));
-
-    next();
-};
-
-const app: Application = express();
-app.use("*", [allowSameOrigin]);
-useExpressServer(app, options);
-app.listen(5000);
+export { createApp, createAppConnection, getAllowSameOriginHandler, routingControllersOptions };

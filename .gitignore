@@ -2,3 +2,4 @@ node_modules
 
 # compiled JS
 build
+dist

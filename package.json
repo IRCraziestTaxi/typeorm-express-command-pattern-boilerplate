@@ -4,13 +4,14 @@
   "description": "Boilerplate example of simple Express API using TypeORM and command pattern.",
   "main": "index.js",
   "scripts": {
-    "mig:build": "node_modules/.bin/tsc --project tsconfig.migrations-only.json",
-    "mig:make": "node_modules/.bin/typeorm migration:generate",
-    "mig:revert": "node_modules/.bin/typeorm migration:revert",
-    "mig:run": "node_modules/.bin/typeorm migration:run",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "node_modules/.bin/tsc",
-    "tslint": "node_modules/.bin/tslint --project ."
+    "dist": "tsc",
+    "mig:build": "tsc --project tsconfig.migrations-only.json",
+    "mig:make": "typeorm migration:generate",
+    "mig:revert": "typeorm migration:revert",
+    "mig:run": "typeorm migration:run",
+    "start": "node build/index",
+    "tsc": "tsc --project tsconfig.local.json",
+    "tslint": "tslint --project ."
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   "dependencies": {
     "cls-hooked": "4.2.2",
     "express": "4.17.1",
+    "mysql": "2.17.1",
     "routing-controllers": "0.7.7",
     "ts-simple-automapper": "1.0.2",
     "ts-simple-nameof": "1.2.0",
