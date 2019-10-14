@@ -1,10 +1,8 @@
-import { CommandResult } from "../types/CommandResult";
-import { CommentDto } from "../DTOs/CommentDto";
-import { Rejection } from "../helpers/Rejection";
-import { LinqRepository } from "typeorm-linq-repository";
-import { Comment } from "../entities/Comment";
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
-import { GenericResponse } from "../helpers/GenericResponse";
+import { LinqRepository } from "typeorm-linq-repository";
+import { CommentDto } from "../DTOs/CommentDto";
+import { Comment } from "../entities/Comment";
 
 export class CommentQueries {
     public async getCommentById(commentId: number): Promise<CommandResult<CommentDto>> {
@@ -21,7 +19,9 @@ export class CommentQueries {
 
             const commentDto = new Mapper().map(comment, new CommentDto());
 
-            return new GenericResponse(commentDto);
+            return new GenericResponse({
+                value: commentDto
+            });
         }
         catch (error) {
             return new Rejection(error);
@@ -41,7 +41,9 @@ export class CommentQueries {
 
             const commentDtos = new Mapper().mapList(comments, CommentDto);
 
-            return new GenericResponse(commentDtos);
+            return new GenericResponse({
+                value: commentDtos
+            });
         }
         catch (error) {
             return new Rejection(error);
@@ -61,7 +63,9 @@ export class CommentQueries {
 
             const commentDtos = new Mapper().mapList(comments, CommentDto);
 
-            return new GenericResponse(commentDtos);
+            return new GenericResponse({
+                value: commentDtos
+            });
         }
         catch (error) {
             return new Rejection(error);

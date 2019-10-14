@@ -1,3 +1,5 @@
+import { CommandResultController } from "@responsekit/express";
+import { CommandResultMediator } from "@responsekit/tsmediator";
 import { Response } from "express";
 import { Body, Delete, Get, JsonController, Param, Post, Put, Res } from "routing-controllers";
 import { AddCommentCommand } from "../commands/addComment/AddCommentCommand";
@@ -6,13 +8,11 @@ import { DeletePostCommand } from "../commands/deletePost/DeletePostCommand";
 import { DeletePostHandler } from "../commands/deletePost/DeletePostHandler";
 import { UpdatePostCommad } from "../commands/updatePost/UpdatePostCommand";
 import { UpdatePostHandler } from "../commands/updatePost/UpdatePostHandler";
-import { RejectionMediator } from "../helpers/RejectionMediator";
 import { CommentQueries } from "../queries/CommentQueries";
 import { PostQueries } from "../queries/PostQueries";
-import { BaseController } from "./_BaseController";
 
 @JsonController("/posts")
-export class PostController extends BaseController {
+export class PostController extends CommandResultController {
     @Post("/:postId/comments")
     public async addComment(
         @Body() request: AddCommentCommand,
@@ -20,7 +20,7 @@ export class PostController extends BaseController {
         @Res() response: Response
     ): Promise<Response> {
         request.postId = postId;
-        const addResult = await new RejectionMediator().Send(AddCommentHandler.type, request);
+        const addResult = await new CommandResultMediator().Send(AddCommentHandler.type, request);
 
         return this.sendResponse(addResult, response);
     }
@@ -32,7 +32,7 @@ export class PostController extends BaseController {
     ): Promise<Response> {
         const request = new DeletePostCommand();
         request.postId = postId;
-        const deleteResult = await new RejectionMediator().Send(DeletePostHandler.type, request);
+        const deleteResult = await new CommandResultMediator().Send(DeletePostHandler.type, request);
 
         return this.sendResponse(deleteResult, response);
     }
@@ -64,7 +64,7 @@ export class PostController extends BaseController {
         @Res() response: Response
     ): Promise<Response> {
         request.postId = postId;
-        const updateResult = await new RejectionMediator().Send(UpdatePostHandler.type, request);
+        const updateResult = await new CommandResultMediator().Send(UpdatePostHandler.type, request);
 
         return this.sendResponse(updateResult, response);
     }

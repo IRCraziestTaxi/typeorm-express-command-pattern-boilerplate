@@ -1,11 +1,9 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
 import { nameof } from "ts-simple-nameof";
 import { Handler, ICommandHandler } from "tsmediator";
 import { LinqRepository } from "typeorm-linq-repository";
 import { Post } from "../../entities/Post";
-import { GenericResponse } from "../../helpers/GenericResponse";
-import { Rejection } from "../../helpers/Rejection";
-import { CommandResult } from "../../types/CommandResult";
 import { AddPostCommand } from "./AddPostCommand";
 
 @Handler(AddPostHandler.type)
@@ -20,7 +18,9 @@ export class AddPostHandler implements ICommandHandler<AddPostCommand, Promise<C
 
             const createdPost = await new LinqRepository(Post).create(addPost);
 
-            return new GenericResponse(createdPost.id);
+            return new GenericResponse({
+                value: createdPost.id
+            });
         }
         catch (error) {
             return new Rejection(error);

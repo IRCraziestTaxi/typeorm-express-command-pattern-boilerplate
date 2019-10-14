@@ -1,10 +1,8 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
 import { LinqRepository } from "typeorm-linq-repository";
 import { UserDto } from "../DTOs/UserDto";
 import { User } from "../entities/User";
-import { GenericResponse } from "../helpers/GenericResponse";
-import { Rejection } from "../helpers/Rejection";
-import { CommandResult } from "../types/CommandResult";
 
 export class UserQueries {
     public async getUserById(userId: number): Promise<CommandResult<UserDto>> {
@@ -17,7 +15,9 @@ export class UserQueries {
 
             const userDto = new Mapper().map(user, new UserDto());
 
-            return new GenericResponse(userDto);
+            return new GenericResponse({
+                value: userDto
+            });
         }
         catch (error) {
             return new Rejection(error);

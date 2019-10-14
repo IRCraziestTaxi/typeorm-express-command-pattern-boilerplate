@@ -1,3 +1,5 @@
+import { CommandResultController } from "@responsekit/express";
+import { CommandResultMediator } from "@responsekit/tsmediator";
 import { Response } from "express";
 import { Body, Delete, Get, JsonController, Param, Post, Put, Res } from "routing-controllers";
 import { AddPostCommand } from "../commands/addPost/AddPostCommand";
@@ -8,14 +10,12 @@ import { DeleteUserCommand } from "../commands/deleteUser/DeleteUserCommand";
 import { DeleteUserHandler } from "../commands/deleteUser/DeleteUserHandler";
 import { UpdateUserCommand } from "../commands/updateUser/UpdateUserCommand";
 import { UpdateUserHandler } from "../commands/updateUser/UpdateUserHandler";
-import { RejectionMediator } from "../helpers/RejectionMediator";
 import { CommentQueries } from "../queries/CommentQueries";
 import { PostQueries } from "../queries/PostQueries";
 import { UserQueries } from "../queries/UserQueries";
-import { BaseController } from "./_BaseController";
 
 @JsonController("/users")
-export class UserController extends BaseController {
+export class UserController extends CommandResultController {
     @Post("/:userId/posts")
     public async addPost(
         @Body() request: AddPostCommand,
@@ -23,7 +23,7 @@ export class UserController extends BaseController {
         @Res() response: Response
     ): Promise<Response> {
         request.userId = userId;
-        const addResult = await new RejectionMediator().Send(AddPostHandler.type, request);
+        const addResult = await new CommandResultMediator().Send(AddPostHandler.type, request);
 
         return this.sendResponse(addResult, response);
     }
@@ -33,7 +33,7 @@ export class UserController extends BaseController {
         @Body() request: AddUserCommand,
         @Res() response: Response
     ): Promise<Response> {
-        const addResult = await new RejectionMediator().Send(AddUserHandler.type, request);
+        const addResult = await new CommandResultMediator().Send(AddUserHandler.type, request);
 
         return this.sendResponse(addResult, response);
     }
@@ -45,7 +45,7 @@ export class UserController extends BaseController {
     ): Promise<Response> {
         const request = new DeleteUserCommand();
         request.userId = userId;
-        const deleteResult = await new RejectionMediator().Send(DeleteUserHandler.type, request);
+        const deleteResult = await new CommandResultMediator().Send(DeleteUserHandler.type, request);
 
         return this.sendResponse(deleteResult, response);
     }
@@ -87,7 +87,7 @@ export class UserController extends BaseController {
         @Res() response: Response
     ): Promise<Response> {
         request.userId = userId;
-        const updateResult = await new RejectionMediator().Send(UpdateUserHandler.type, request);
+        const updateResult = await new CommandResultMediator().Send(UpdateUserHandler.type, request);
 
         return this.sendResponse(updateResult, response);
     }

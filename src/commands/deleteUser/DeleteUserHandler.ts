@@ -1,10 +1,8 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { nameof } from "ts-simple-nameof";
 import { Handler, ICommandHandler } from "tsmediator";
 import { LinqRepository } from "typeorm-linq-repository";
 import { User } from "../../entities/User";
-import { GenericResponse } from "../../helpers/GenericResponse";
-import { Rejection } from "../../helpers/Rejection";
-import { CommandResult } from "../../types/CommandResult";
 import { DeleteUserCommand } from "./DeleteUserCommand";
 
 @Handler(DeleteUserHandler.type)
@@ -17,7 +15,9 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand, Pro
         try {
             const success = await new LinqRepository(User).delete(request.userId);
 
-            return new GenericResponse(success);
+            return new GenericResponse({
+                value: success
+            });
         }
         catch (error) {
             return new Rejection(error);

@@ -1,10 +1,8 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { nameof } from "ts-simple-nameof";
 import { ICommandHandler } from "tsmediator";
 import { LinqRepository } from "typeorm-linq-repository";
 import { Post } from "../../entities/Post";
-import { GenericResponse } from "../../helpers/GenericResponse";
-import { Rejection } from "../../helpers/Rejection";
-import { CommandResult } from "../../types/CommandResult";
 import { DeletePostCommand } from "./DeletePostCommand";
 
 export class DeletePostHandler implements ICommandHandler<DeletePostCommand, Promise<CommandResult<boolean>>> {
@@ -16,7 +14,9 @@ export class DeletePostHandler implements ICommandHandler<DeletePostCommand, Pro
         try {
             const success = await new LinqRepository(Post).delete(request.postId);
 
-            return new GenericResponse(success);
+            return new GenericResponse({
+                value: success
+            });
         }
         catch (error) {
             return new Rejection(error);

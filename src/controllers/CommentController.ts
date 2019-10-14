@@ -1,15 +1,15 @@
+import { CommandResultController } from "@responsekit/express";
+import { CommandResultMediator } from "@responsekit/tsmediator";
 import { Response } from "express";
 import { Body, Delete, Get, JsonController, Param, Put, Res } from "routing-controllers";
 import { DeleteCommentCommand } from "../commands/deleteComment/DeleteCommentCommand";
 import { DeleteCommentHandler } from "../commands/deleteComment/DeleteCommentHandler";
 import { UpdateCommentCommand } from "../commands/updateComment/UpdateCommentCommand";
 import { UpdateCommentHandler } from "../commands/updateComment/UpdateCommentHandler";
-import { RejectionMediator } from "../helpers/RejectionMediator";
 import { CommentQueries } from "../queries/CommentQueries";
-import { BaseController } from "./_BaseController";
 
 @JsonController("/comments")
-export class CommentController extends BaseController {
+export class CommentController extends CommandResultController {
     @Delete("/:commentId")
     public async deleteComment(
         @Param("commentId") commentId: number,
@@ -17,7 +17,7 @@ export class CommentController extends BaseController {
     ): Promise<Response> {
         const request = new DeleteCommentCommand();
         request.commentId = commentId;
-        const deleteResult = await new RejectionMediator().Send(DeleteCommentHandler.type, request);
+        const deleteResult = await new CommandResultMediator().Send(DeleteCommentHandler.type, request);
 
         return this.sendResponse(deleteResult, response);
     }
@@ -39,7 +39,7 @@ export class CommentController extends BaseController {
         @Res() response: Response
     ): Promise<Response> {
         request.commentId = commentId;
-        const updateResult = await new RejectionMediator().Send(UpdateCommentHandler.type, request);
+        const updateResult = await new CommandResultMediator().Send(UpdateCommentHandler.type, request);
 
         return this.sendResponse(updateResult, response);
     }

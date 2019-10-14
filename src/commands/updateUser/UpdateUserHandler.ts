@@ -1,11 +1,9 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
 import { nameof } from "ts-simple-nameof";
 import { Handler, ICommandHandler } from "tsmediator";
 import { LinqRepository } from "typeorm-linq-repository";
 import { User } from "../../entities/User";
-import { GenericResponse } from "../../helpers/GenericResponse";
-import { Rejection } from "../../helpers/Rejection";
-import { CommandResult } from "../../types/CommandResult";
 import { UpdateUserCommand } from "./UpdateUserCommand";
 
 @Handler(UpdateUserHandler.type)
@@ -28,7 +26,9 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand, Pro
 
             await userRepository.update(user);
 
-            return new GenericResponse(true);
+            return new GenericResponse({
+                value: true
+            });
         }
         catch (error) {
             return new Rejection(error);

@@ -1,10 +1,8 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
 import { LinqRepository } from "typeorm-linq-repository";
 import { PostDto } from "../DTOs/PostDto";
 import { Post } from "../entities/Post";
-import { GenericResponse } from "../helpers/GenericResponse";
-import { Rejection } from "../helpers/Rejection";
-import { CommandResult } from "../types/CommandResult";
 
 export class PostQueries {
     public async getPostById(postId: number): Promise<CommandResult<PostDto>> {
@@ -21,7 +19,9 @@ export class PostQueries {
 
             const postDto = new Mapper().map(post, new PostDto());
 
-            return new GenericResponse(postDto);
+            return new GenericResponse({
+                value: postDto
+            });
         }
         catch (error) {
             return new Rejection(error);
@@ -41,7 +41,9 @@ export class PostQueries {
 
             const postDtos = new Mapper().mapList(posts, PostDto);
 
-            return new GenericResponse(postDtos);
+            return new GenericResponse({
+                value: postDtos
+            });
         }
         catch (error) {
             return new Rejection(error);

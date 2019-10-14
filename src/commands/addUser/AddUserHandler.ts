@@ -1,11 +1,9 @@
+import { CommandResult, GenericResponse, Rejection } from "@responsekit/core";
 import { Mapper } from "ts-simple-automapper";
 import { nameof } from "ts-simple-nameof";
 import { Handler, ICommandHandler } from "tsmediator";
 import { LinqRepository } from "typeorm-linq-repository";
 import { User } from "../../entities/User";
-import { GenericResponse } from "../../helpers/GenericResponse";
-import { Rejection } from "../../helpers/Rejection";
-import { CommandResult } from "../../types/CommandResult";
 import { AddUserCommand } from "./AddUserCommand";
 
 @Handler(AddUserHandler.type)
@@ -20,7 +18,9 @@ export class AddUserHandler implements ICommandHandler<AddUserCommand, Promise<C
 
             const createdUser = await new LinqRepository(User).create(addUser);
 
-            return new GenericResponse(createdUser.id);
+            return new GenericResponse({
+                value: createdUser.id
+            });
         }
         catch (error) {
             return new Rejection(error);
